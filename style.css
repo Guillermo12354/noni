@@ -1,0 +1,302 @@
+/* --- ESTILOS GENERALES Y RESETEOS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000; /* Fondo negro absoluto */
+    overflow: hidden; /* Evita barras de desplazamiento */
+    color: white;
+    font-family: 'Courier Prime', monospace; /* Por defecto para todo */
+}
+
+/* --- ESCENA DE LA GALAXIA --- */
+#galaxy-scene {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    perspective: 1500px; /* Profundidad de cámara estilo Google Earth */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#master-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out; /* Suavizado del arrastre */
+}
+
+/* Lienzo de estrellas */
+#stars-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1; /* El contenido va sobre las estrellas */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- TÍTULO PRINCIPAL "TE AMO" --- */
+.main-title {
+    margin-top: 5vh;
+    font-size: 5rem;
+    text-align: center;
+    color: #fff;
+    /* Efecto Neón Azul-Rosa pulsante */
+    text-shadow: 
+        0 0 5px #fff, 
+        0 0 10px #fff, 
+        0 0 20px #0ff, 
+        0 0 30px #0ff, 
+        0 0 40px #0ff, 
+        0 0 55px #0ff, 
+        0 0 75px #0ff;
+    animation: titleGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #0ff, 0 0 30px #0ff, 0 0 40px #0ff;
+    }
+    to {
+        text-shadow: 0 0 20px #fff, 0 0 30px #ff00de, 0 0 40px #ff00de, 0 0 50px #ff00de;
+    }
+}
+
+/* --- ELEMENTOS CENTRALES --- */
+.central-point {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pulsing-core {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7);
+    animation: pulseCore 2s ease-in-out infinite;
+}
+
+@keyframes pulseCore {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+        box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7);
+    }
+    50% {
+        transform: scale(2.5);
+        opacity: 0.3;
+        box-shadow: 0 0 50px 20px rgba(0, 255, 255, 0.5);
+    }
+}
+
+.flowers {
+    position: relative;
+    z-index: 2;
+}
+.flowers img {
+    width: 120px;
+    height: 120px;
+}
+
+/* --- ELEMENTOS FLOTANTES --- */
+.floating-item {
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    transition: transform 0.1s linear; /* Esto hace que el giro se sienta más orgánico */
+}
+
+/* Texto flotante individual */
+.floating-text {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+/* Imagen flotante individual */
+.floating-image {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 2px solid white;
+    box-shadow: 0 0 10px white;
+}
+
+/* Efectos neón para cada tipo de texto */
+.neon-pink {
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff00de, 0 0 15px #ff00de;
+}
+.neon-blue {
+    text-shadow: 0 0 5px #fff, 0 0 10px #00e0ff, 0 0 15px #00e0ff;
+}
+
+/* --- VENTANA MODAL (POP-UP) --- */
+/* --- VENTANA MODAL (POP-UP) AJUSTADA --- */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+}
+
+.modal-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); /* Un poco más oscuro */
+}
+
+.modal-content {
+    position: relative;
+    margin: 5vh auto; /* 5% de margen superior para centrarlo un poco */
+    width: 90%;
+    max-width: 500px; /* Reducimos el ancho máximo para que sea más estilizado */
+    max-height: 85vh; /* Evita que el modal sea más alto que la pantalla */
+    background-color: #080808; /* Casi negro */
+    border: 3px solid #bc13fe; /* Borde neón morado */
+    border-radius: 20px;
+    padding: 25px; /* Un poco menos de padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 25px #bc13fe, inset 0 0 15px rgba(188, 19, 254, 0.5);
+    z-index: 101;
+    overflow-y: auto; /* IMPORTANTE: Permite hacer scroll si el texto es muy largo */
+}
+
+/* Botón de cierre × */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #bc13fe;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 0 0 10px #bc13fe;
+    z-index: 102;
+}
+
+/* Imagen dentro del modal AJUSTADA */
+.modal-image-container img {
+    width: 150px; /* Tamaño fijo y pequeño para la imagen, como en el video */
+    height: 150px;
+    object-fit: cover; /* Recorta la imagen para que sea cuadrada sin deformarse */
+    border-radius: 10px;
+    margin-bottom: 20px; /* Espacio con el texto */
+    border: 2px solid #bc13fe;
+    box-shadow: 0 0 10px rgba(188, 19, 254, 0.7);
+}
+
+/* Texto largo neón (Courier) AJUSTADO */
+.neon-text-body {
+    font-family: 'Courier Prime', monospace;
+    color: #fff;
+    font-size: 1rem; /* Un tamaño de letra cómodo para leer */
+    line-height: 1.5;
+    text-align: center; /* Centrado como en el video */
+    text-shadow: 
+        0 0 5px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(188, 19, 254, 0.6);
+    margin-bottom: 10px; /* Espacio al final */
+}
+.galaxy-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none; /* No interrumpen los clics en las fotos */
+    z-index: 1; /* Por debajo de los textos/imágenes */
+    /* Brillo neón base */
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff;
+    animation: particleBlink 2s infinite alternate;
+}
+
+@keyframes particleBlink {
+    from { opacity: 0.3; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.2); }
+}
+
+#welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #2b004a 0%, #000000 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 1s ease, visibility 1s;
+}
+
+.heart-gif {
+    width: 250px; /* Tamaño ideal para que luzca como en tu captura */
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 100, 150, 0.4));
+    margin-bottom: 10px;
+}
+
+#start-button {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 55px;
+    color: #ff7b00;
+    text-shadow: 0 0 15px #ff7b00, 0 0 30px #ff3300;
+    cursor: pointer;
+    margin: 10px 0;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+#start-button:hover {
+    transform: scale(1.1);
+}
+
+.subtitle {
+    color: #df98fa;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Para que la galaxia no se vea antes de tiempo */
+#galaxy-scene, #stars-canvas {
+    opacity: 0;
+    transition: opacity 1.5s ease;
+}
